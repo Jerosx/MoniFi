@@ -1,9 +1,11 @@
 <?php
 
-function create_conection() {
-    /*Establece la conexión a la base de datos MySQL */
+include_once(__DIR__ . '/../../config.php');
 
-    $env = parse_ini_file('.env');
+function create_conection() {
+    /* Establece la conexión a la base de datos MySQL */
+
+    $env = parse_ini_file(ENV_PATH);
 
     $HOST = $env['DATABASE_HOST'];
     $USER = $env['DATABASE_USER'];
@@ -15,10 +17,9 @@ function create_conection() {
     if ($conection->connect_error) {
         die("Conexión fallida: " . $conection->connect_error);
     }
-    $conection->set_charset('utf8');
 
+    $conection->set_charset('utf8');
     return $conection;
 }
-
 
 ?>
