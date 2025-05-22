@@ -4,24 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moni-Fi</title>
-    <link rel="stylesheet" href="style/styles.css">
+    <link rel="stylesheet" href="style/loggin_style.css">
 </head>
 <body>
-    
-    <form action="..\controllers\process\process_login.php" method="POST">
 
-        <label for="username">Usuario </label>
-        <input type="text" placeholder="Inserte su usuario." id="username" name="username" required>
+    <h1 class="login-title">Bienvenido a Moni-Fi</h1>
 
-        <label for="password" class="form-label">Contraseña</label>
-        <input type="password" placeholder="Inserte su contraseña." id="password" name="password"  required>
-        
-        <a href="register_user.html">Registrarme</a>
+    <div class = "login_form_container">
+        <form action="..\controllers\process\process_login.php" method="POST">
 
-        <button type="submit">Iniciar Sesión</button>
+            <div class="username">
+                <label for="username">Usuario </label>
+                <input type="text" placeholder="Inserte su usuario." id="username" name="username" required>
+            </div>
 
-    </form>
+            <div class="password">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" placeholder="Inserte su contraseña." id="password" name="password"  required>
+            </div>
 
+            <div class="register">
+                <a href="register_user.html">¿No tienes una cuenta?</a>
+            </div>
+
+            <div class="input_button">
+                <button type="submit">Iniciar Sesión</button>
+            </div>
+        </form>
+    </div>
+
+    <img src="character/like.png" alt="Decoración" class="corner-image">
 
 
 </body>

@@ -1,0 +1,107 @@
+/* Reset básico */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Centrado del contenedor */
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(55, 169, 72);
+}
+
+/* Contenedor del formulario */
+.login_form_container {
+    background-color: rgb(30, 129, 96);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    color: white;
+}
+
+.login_form_container label {
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+
+/* Inputs */
+.login_form_container input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Botón */
+.input_button button {
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+    color: rgb(30, 129, 96);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.input_button button:hover {
+    background-color: #e6e6e6;
+}
+
+/* Enlace de registro */
+.register {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.register a {
+    color: #ffffff;
+    text-decoration: underline;
+    font-size: 0.9em;
+}
+
+.register a:hover {
+    color: #c0ffe0;
+}
+
+.corner-image {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 25vw;
+    max-width: 200px;
+    height: auto;
+    z-index: 10;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.login-title {
+    position: absolute;
+    top: 10%;
+    text-align: center;
+    width: 100%;
+    font-size: 2.5rem;
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 500px) {
+    .login-title {
+        font-size: 1.8rem;
+    }
+}
