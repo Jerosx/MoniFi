@@ -6,6 +6,25 @@
     <title>Document</title>
 </head>
 <body>
-    a
+    <form action="../controllers/process/process_register_user.php" method="POST">
+
+            
+                <label for="name">Nombre </label>
+                <input type="text" placeholder="Inserte su usuario." id="name" name="name" required>
+
+                <label for="lastname">Apellidos </label>
+                <input type="text" placeholder="Inserte su usuario." id="lastname" name="lastname" required>
+
+                <label for="username">Nombre de usuario:</label>
+                <input type="text" placeholder="Inserte su usuario." id="username" name="username" required>
+      
+
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" placeholder="Inserte su contraseña." id="password" name="password"  required>
+
+
+          
+                <button type="submit">Registrarme</button>
+        </form>
 </body>
 </html>
