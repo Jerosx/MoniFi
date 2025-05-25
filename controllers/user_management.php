@@ -3,28 +3,21 @@
 $rootPath = realpath(__DIR__ . '/..');
 include_once($rootPath . '/config.php');
 include_once(DB_PATH);
+include_once(DB_METADATA_PATH);
 
 
 function validate_password($conection, $username) {
-    /*Valida y obtiene la contraseña cifrada asociada al usuario
-
-    Args:
-        - $conection: Variable que contiene la conexión a la bd.
-        - $username: Usuario ingresado.
-
-    Return:
-        Contraseña del usuario cifrada.
-
-     */
-
     $username = mysqli_real_escape_string($conection, $username);
 
-    $sql = "SELECT user_password FROM tbl_usuarios WHERE nombre_usuario = '$username'";
+    $sql = "SELECT " . TblUsuarios::CLAVE_USUARIO .
+           " FROM " . TblUsuarios::TBL_USUARIO .
+           " WHERE " . TblUsuarios::NOMBRE_USUARIO . " = '$username'";
+
     $result = mysqli_query($conection, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
-        return $row['user_password'];
+        return $row[TblUsuarios::CLAVE_USUARIO];
     }
 
     return null;
@@ -32,20 +25,12 @@ function validate_password($conection, $username) {
 
 
 function validate_username($username, $conection) {
-    /*Verifica si el nombre de usuario existe en la base de datos.
-
-    Args:
-        - $conection: Variable que contiene la conexión a la bd.
-        - $username: Usuario ingresado.
-
-    Return:
-        Cantidad de registros encontrados en la bd para ese usuario.
-
-     */
-
     $username = mysqli_real_escape_string($conection, $username);
 
-    $sql = "SELECT id FROM tbl_usuarios WHERE nombre_usuario = '$username'";
+    $sql = "SELECT " . TblUsuarios::ID .
+           " FROM " . TblUsuarios::TBL_USUARIO .
+           " WHERE " . TblUsuarios::NOMBRE_USUARIO . " = '$username'";
+
     $result = mysqli_query($conection, $sql);
 
     return ($result && mysqli_num_rows($result) > 0);
@@ -53,25 +38,12 @@ function validate_username($username, $conection) {
 
 
 function validate_credentials($username, $password) {
-    /*Valida si el usuario ingresado existe en la bd y después valida la contraseña
-    ingresada, en caso de que no exista el usuario o la contraseña sea equivocada
-    lanza una advertencia.
-
-    Args:
-        - $username: Usuario ingresado.
-        - $password: Contraseña ingresada.
-    
-    Return:
-        Si las credenciales son correctas le da al usuario acceso al aplicativo.
-
-     */
-
     $conection = create_conection();
 
     if (!validate_username($username, $conection)) {
         echo "<script> alert('Usuario no existente');
-                            window.location.href='../../views/index.html';
-            </script>";
+                        window.location.href='../../views/index.html';
+              </script>";
         exit;
     }
 
@@ -83,22 +55,27 @@ function validate_credentials($username, $password) {
         header("Location: ../../views/main.html");
         exit;
     } else {
-        // Contraseña incorrecta
-        echo "<script> alert('Contraseña incorrecta.);
-                            window.location.href='../../views/index.html';
-            </script>";
+        echo "<script> alert('Contraseña incorrecta.');
+                        window.location.href='../../views/index.html';
+              </script>";
         exit;
     }
+
     $conection->close();
 }
 
 
 function insert_user_in_database($name, $lastname, $username, $password, $conection){
-    /* Realiza el insert de los datos de registro a la base de datos */
-
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    $stmt = $conection->prepare("INSERT INTO tbl_usuarios (nombre_usuario, nombre, apellidos, user_password) VALUES (?, ?, ?, ?)");
+    $sql = "INSERT INTO " . TblUsuarios::TBL_USUARIO . " (" .
+           TblUsuarios::NOMBRE_USUARIO . ", " .
+           TblUsuarios::NOMBRE . ", " .
+           TblUsuarios::APELLIDOS . ", " .
+           TblUsuarios::CLAVE_USUARIO .
+           ") VALUES (?, ?, ?, ?)";
+
+    $stmt = $conection->prepare($sql);
     $stmt->bind_param("ssss", $username, $name, $lastname, $hashed_password);
 
     $success = $stmt->execute();
@@ -109,8 +86,6 @@ function insert_user_in_database($name, $lastname, $username, $password, $conect
 
 
 function register_user($name, $lastname, $username, $password){
-    /* Registra un nuevo usuario después de validar su existencia */
-
     $conection = create_conection();
 
     if (validate_username($username, $conection)) {
