@@ -42,7 +42,7 @@ function validate_credentials($username, $password) {
 
     if (!validate_username($username, $conection)) {
         echo "<script> alert('Usuario no existente');
-                        window.location.href='../../views/index.html';
+                        window.location.href='../../public/index.html';
               </script>";
         exit;
     }
@@ -52,11 +52,11 @@ function validate_credentials($username, $password) {
     if ($stored_password && password_verify($password, $stored_password)) {
         session_start();
         $_SESSION['usuario'] = $username;
-        header("Location: ../../views/main.html");
+        header("Location: ../../public/main.html");
         exit;
     } else {
         echo "<script> alert('Contraseña incorrecta.');
-                        window.location.href='../../views/index.html';
+                        window.location.href='../../public/index.html';
               </script>";
         exit;
     }
@@ -90,7 +90,7 @@ function register_user($name, $lastname, $username, $password){
 
     if (validate_username($username, $conection)) {
         echo "<script> alert('Usuario ya en uso.');
-                        window.location.href='../../views/register_user.html';
+                        window.location.href='../../public/register_user.html';
               </script>";
         $conection->close();
         exit;
@@ -100,11 +100,11 @@ function register_user($name, $lastname, $username, $password){
 
     if ($register_user) {
         echo "<script> alert('Usuario registrado con éxito.');
-                        window.location.href='../../views/index.html';
+                        window.location.href='../../public/index.html';
               </script>";
     } else {
         echo "<script> alert('Error al registrar usuario.');
-                        window.location.href='../../views/index.html';
+                        window.location.href='../../public/index.html';
               </script>";
     }
 
