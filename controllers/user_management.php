@@ -52,7 +52,7 @@ function validate_credentials($username, $password) {
     if ($stored_password && password_verify($password, $stored_password)) {
         session_start();
         $_SESSION['usuario'] = $username;
-        header("Location: ../../public/main.html");
+        header("Location: ../../public/main.php");
         exit;
     } else {
         echo "<script> alert('Contraseña incorrecta.');

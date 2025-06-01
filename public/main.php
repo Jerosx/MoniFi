@@ -1,3 +1,8 @@
+<?php
+# VALIDACIÓN DE SESION ACTIVA
+include('..\controllers\validate_exist_sesion.php');
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +23,9 @@
     <h1 class="text-center mt-5 pt-5">Contenido principal de la página</h1>
   </main>
 
+  <form action="../controllers/close_session.php" method="post">
+                <button class="btn btn-warning mt-4" type="submit" id="cerrarSesionBtn" name="cerrarSesionBtn">Cerrar Sesión</button>
+  </form>
 
 </body>
 </html>
