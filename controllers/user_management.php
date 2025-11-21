@@ -6,109 +6,113 @@ include_once(DB_PATH);
 include_once(DB_METADATA_PATH);
 
 
-function validate_password($conection, $username) {
-    $username = mysqli_real_escape_string($conection, $username);
+function get_password_hash($con, $email) {
+    $email = mysqli_real_escape_string($con, $email);
 
-    $sql = "SELECT " . TblUsuarios::CLAVE_USUARIO .
-           " FROM " . TblUsuarios::TBL_USUARIO .
-           " WHERE " . TblUsuarios::NOMBRE_USUARIO . " = '$username'";
+    $sql = "SELECT " . TblUsuarios::CLAVE_USUARIO . "
+            FROM " . TblUsuarios::TBL_NAME . "
+            WHERE " . TblUsuarios::EMAIL . " = ?";
 
-    $result = mysqli_query($conection, $sql);
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        return $row[TblUsuarios::CLAVE_USUARIO];
+    if ($result && $result->num_rows > 0) {
+        return $result->fetch_assoc()[TblUsuarios::CLAVE_USUARIO];
     }
 
     return null;
 }
 
 
-function validate_username($username, $conection) {
-    $username = mysqli_real_escape_string($conection, $username);
+function email_exists($con, $email) {
+    $email = mysqli_real_escape_string($con, $email);
 
-    $sql = "SELECT " . TblUsuarios::ID .
-           " FROM " . TblUsuarios::TBL_USUARIO .
-           " WHERE " . TblUsuarios::NOMBRE_USUARIO . " = '$username'";
+    $sql = "SELECT " . TblUsuarios::ID . "
+            FROM " . TblUsuarios::TBL_NAME . "
+            WHERE " . TblUsuarios::EMAIL . " = ?";
 
-    $result = mysqli_query($conection, $sql);
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    return ($result && mysqli_num_rows($result) > 0);
+    return ($result && $result->num_rows > 0);
 }
 
 
-function validate_credentials($username, $password) {
-    $conection = create_conection();
+function validate_credentials($email, $password) {
+    $con = create_conection();
 
-    if (!validate_username($username, $conection)) {
-        echo "<script> alert('Usuario no existente');
-                        window.location.href='../../public/index.html';
+    if (!email_exists($con, $email)) {
+        echo "<script>
+                alert('El correo no está registrado.');
+                window.location.href='../../public/index.html';
               </script>";
         exit;
     }
 
-    $stored_password = validate_password($conection, $username);
+    $stored_hash = get_password_hash($con, $email);
 
-    if ($stored_password && password_verify($password, $stored_password)) {
+    if ($stored_hash && password_verify($password, $stored_hash)) {
         session_start();
-        $_SESSION['usuario'] = $username;
+        $_SESSION['usuario'] = $email;
+
         header("Location: ../../public/main.php");
         exit;
-    } else {
-        echo "<script> alert('Contraseña incorrecta.');
-                        window.location.href='../../public/index.html';
-              </script>";
-        exit;
     }
 
-    $conection->close();
+    echo "<script>
+            alert('Contraseña incorrecta.');
+            window.location.href='../../public/index.html';
+          </script>";
+    exit;
 }
 
 
-function insert_user_in_database($name, $lastname, $username, $password, $conection){
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+function insert_user($name, $email, $password, $con) {
 
-    $sql = "INSERT INTO " . TblUsuarios::TBL_USUARIO . " (" .
-           TblUsuarios::NOMBRE_USUARIO . ", " .
-           TblUsuarios::NOMBRE . ", " .
-           TblUsuarios::APELLIDOS . ", " .
-           TblUsuarios::CLAVE_USUARIO .
-           ") VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO " . TblUsuarios::TBL_NAME . " (
+                " . TblUsuarios::NOMBRE . ",
+                " . TblUsuarios::EMAIL . ",
+                " . TblUsuarios::CLAVE_USUARIO . "
+            ) VALUES (?, ?, ?)";
 
-    $stmt = $conection->prepare($sql);
-    $stmt->bind_param("ssss", $username, $name, $lastname, $hashed_password);
+    $hashed = password_hash($password, PASSWORD_BCRYPT);
 
-    $success = $stmt->execute();
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("sss", $name, $email, $hashed);
 
-    $stmt->close();
-    return $success;
+    return $stmt->execute();
 }
 
 
-function register_user($name, $lastname, $username, $password){
-    $conection = create_conection();
+function register_user($name, $email, $password) {
+    $con = create_conection();
 
-    if (validate_username($username, $conection)) {
-        echo "<script> alert('Usuario ya en uso.');
-                        window.location.href='../../public/register_user.html';
+    if (email_exists($con, $email)) {
+        echo "<script>
+                alert('Este correo ya está registrado.');
+                window.location.href='../../public/register_user.html';
               </script>";
-        $conection->close();
+        $con->close();
         exit;
     }
 
-    $register_user = insert_user_in_database($name, $lastname, $username, $password, $conection);
-
-    if ($register_user) {
-        echo "<script> alert('Usuario registrado con éxito.');
-                        window.location.href='../../public/index.html';
+    if (insert_user($name, $email, $password, $con)) {
+        echo "<script>
+                alert('Usuario creado con éxito');
+                window.location.href='../../public/index.html';
               </script>";
     } else {
-        echo "<script> alert('Error al registrar usuario.');
-                        window.location.href='../../public/index.html';
+        echo "<script>
+                alert('Error al registrar usuario');
+                window.location.href='../../public/register_user.html';
               </script>";
     }
 
-    $conection->close();
+    $con->close();
     exit;
 }
 

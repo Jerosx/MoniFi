@@ -1,15 +1,15 @@
 <?php
 include('../user_management.php');
 
-$username = trim($_POST['username'] ?? '');
+$email = trim($_POST['email'] ?? '');
 $password = trim($_POST['password'] ?? '');
 
-if (empty($username) || empty($password)) {
+if (empty($email) || empty($password)) {
     echo "<script> alert('Todos los campos deben estar completos');
                         window.location.href='../../views/index.html';
               </script>";
     exit;
 }
 
-validate_credentials($username, $password);
+validate_credentials($email, $password);
 ?>
