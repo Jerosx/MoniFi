@@ -6,7 +6,7 @@ $password = trim($_POST['password'] ?? '');
 
 if (empty($email) || empty($password)) {
     echo "<script> alert('Todos los campos deben estar completos');
-                        window.location.href='../../views/index.html';
+                        window.location.href='../../public/index.html';
               </script>";
     exit;
 }

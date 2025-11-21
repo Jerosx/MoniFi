@@ -7,7 +7,7 @@ if(session_status() == PHP_SESSION_NONE) {
 }
 
 # Obtener el valor de la sesión
-$user_session= $_SESSION['usuario'];
+$user_session= $_SESSION['email'];
 
 if($user_session== null || $user_session==''){
     /**Si el valor codigoUser está vacio, significa que no hay una sesión activa,

@@ -57,9 +57,9 @@ function validate_credentials($email, $password) {
 
     if ($stored_hash && password_verify($password, $stored_hash)) {
         session_start();
-        $_SESSION['usuario'] = $email;
+        $_SESSION['email'] = $email;
 
-        header("Location: ../../public/main.php");
+        header("Location: ../../views/main.php");
         exit;
     }
 
