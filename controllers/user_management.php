@@ -3,137 +3,116 @@
 $rootPath = realpath(__DIR__ . '/..');
 include_once($rootPath . '/config.php');
 include_once(DB_PATH);
+include_once(DB_METADATA_PATH);
 
 
-function validate_password($conection, $username) {
-    /*Valida y obtiene la contraseña cifrada asociada al usuario
+function get_password_hash($con, $email) {
+    $email = mysqli_real_escape_string($con, $email);
 
-    Args:
-        - $conection: Variable que contiene la conexión a la bd.
-        - $username: Usuario ingresado.
+    $sql = "SELECT " . TblUsuarios::CLAVE_USUARIO . "
+            FROM " . TblUsuarios::TBL_NAME . "
+            WHERE " . TblUsuarios::EMAIL . " = ?";
 
-    Return:
-        Contraseña del usuario cifrada.
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-     */
-
-    $username = mysqli_real_escape_string($conection, $username);
-
-    $sql = "SELECT user_password FROM tbl_usuarios WHERE nombre_usuario = '$username'";
-    $result = mysqli_query($conection, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        return $row['user_password'];
+    if ($result && $result->num_rows > 0) {
+        return $result->fetch_assoc()[TblUsuarios::CLAVE_USUARIO];
     }
 
     return null;
 }
 
 
-function validate_username($username, $conection) {
-    /*Verifica si el nombre de usuario existe en la base de datos.
+function email_exists($con, $email) {
+    $email = mysqli_real_escape_string($con, $email);
 
-    Args:
-        - $conection: Variable que contiene la conexión a la bd.
-        - $username: Usuario ingresado.
+    $sql = "SELECT " . TblUsuarios::ID . "
+            FROM " . TblUsuarios::TBL_NAME . "
+            WHERE " . TblUsuarios::EMAIL . " = ?";
 
-    Return:
-        Cantidad de registros encontrados en la bd para ese usuario.
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-     */
-
-    $username = mysqli_real_escape_string($conection, $username);
-
-    $sql = "SELECT id FROM tbl_usuarios WHERE nombre_usuario = '$username'";
-    $result = mysqli_query($conection, $sql);
-
-    return ($result && mysqli_num_rows($result) > 0);
+    return ($result && $result->num_rows > 0);
 }
 
 
-function validate_credentials($username, $password) {
-    /*Valida si el usuario ingresado existe en la bd y después valida la contraseña
-    ingresada, en caso de que no exista el usuario o la contraseña sea equivocada
-    lanza una advertencia.
+function validate_credentials($email, $password) {
+    $con = create_conection();
 
-    Args:
-        - $username: Usuario ingresado.
-        - $password: Contraseña ingresada.
-    
-    Return:
-        Si las credenciales son correctas le da al usuario acceso al aplicativo.
-
-     */
-
-    $conection = create_conection();
-
-    if (!validate_username($username, $conection)) {
-        echo "<script> alert('Usuario no existente');
-                            window.location.href='../../views/index.html';
-            </script>";
+    if (!email_exists($con, $email)) {
+        echo "<script>
+                alert('El correo no está registrado.');
+                window.location.href='../../public/index.html';
+              </script>";
         exit;
     }
 
-    $stored_password = validate_password($conection, $username);
+    $stored_hash = get_password_hash($con, $email);
 
-    if ($stored_password && password_verify($password, $stored_password)) {
+    if ($stored_hash && password_verify($password, $stored_hash)) {
         session_start();
-        $_SESSION['usuario'] = $username;
-        header("Location: ../../views/main.html");
-        exit;
-    } else {
-        // Contraseña incorrecta
-        echo "<script> alert('Contraseña incorrecta.);
-                            window.location.href='../../views/index.html';
-            </script>";
+        $_SESSION['email'] = $email;
+
+        header("Location: ../../views/main.php");
         exit;
     }
-    $conection->close();
+
+    echo "<script>
+            alert('Contraseña incorrecta.');
+            window.location.href='../../public/index.html';
+          </script>";
+    exit;
 }
 
 
-function insert_user_in_database($name, $lastname, $username, $password, $conection){
-    /* Realiza el insert de los datos de registro a la base de datos */
+function insert_user($name, $email, $password, $con) {
 
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+    $sql = "INSERT INTO " . TblUsuarios::TBL_NAME . " (
+                " . TblUsuarios::NOMBRE . ",
+                " . TblUsuarios::EMAIL . ",
+                " . TblUsuarios::CLAVE_USUARIO . "
+            ) VALUES (?, ?, ?)";
 
-    $stmt = $conection->prepare("INSERT INTO tbl_usuarios (nombre_usuario, nombre, apellidos, user_password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $username, $name, $lastname, $hashed_password);
+    $hashed = password_hash($password, PASSWORD_BCRYPT);
 
-    $success = $stmt->execute();
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("sss", $name, $email, $hashed);
 
-    $stmt->close();
-    return $success;
+    return $stmt->execute();
 }
 
 
-function register_user($name, $lastname, $username, $password){
-    /* Registra un nuevo usuario después de validar su existencia */
+function register_user($name, $email, $password) {
+    $con = create_conection();
 
-    $conection = create_conection();
-
-    if (validate_username($username, $conection)) {
-        echo "<script> alert('Usuario ya en uso.');
-                        window.location.href='../../views/register_user.html';
+    if (email_exists($con, $email)) {
+        echo "<script>
+                alert('Este correo ya está registrado.');
+                window.location.href='../../public/register_user.html';
               </script>";
-        $conection->close();
+        $con->close();
         exit;
     }
 
-    $register_user = insert_user_in_database($name, $lastname, $username, $password, $conection);
-
-    if ($register_user) {
-        echo "<script> alert('Usuario registrado con éxito.');
-                        window.location.href='../../views/index.html';
+    if (insert_user($name, $email, $password, $con)) {
+        echo "<script>
+                alert('Usuario creado con éxito');
+                window.location.href='../../public/index.html';
               </script>";
     } else {
-        echo "<script> alert('Error al registrar usuario.');
-                        window.location.href='../../views/index.html';
+        echo "<script>
+                alert('Error al registrar usuario');
+                window.location.href='../../public/register_user.html';
               </script>";
     }
 
-    $conection->close();
+    $con->close();
     exit;
 }
 

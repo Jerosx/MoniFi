@@ -1,10 +1,16 @@
 <?php
 include('../user_management.php');
 
-$name = $_POST['name'] ?? '';
-$lastname = $_POST['lastname'] ?? '';
-$username = $_POST['username'] ?? '';
-$password =  $_POST['password'] ?? '';
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$password = trim($_POST['password'] ?? '');
 
-register_user($name, $lastname, $username, $password);
+if (empty($name) || empty($email) || empty($password)) {
+    echo "<script> alert('Todos los campos deben estar completos');
+                        window.location.href='../../public/register_user.html';
+              </script>";
+    exit;
+}
+
+register_user($name, $email, $password);
 ?>

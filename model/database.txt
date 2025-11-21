@@ -1,0 +1,106 @@
+-- =====================================================================
+-- CREAR BASE DE DATOS
+-- =====================================================================
+
+-- =====================================================================
+-- TABLA: tbl_usuarios
+-- =====================================================================
+CREATE TABLE tbl_usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =====================================================================
+-- TABLA: tipo_gasto
+-- =====================================================================
+CREATE TABLE tipo_gasto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- =====================================================================
+-- TABLA: tbl_cuenta
+-- Cada cuenta pertenece a un usuario y representa un presupuesto/salario
+-- =====================================================================
+CREATE TABLE tbl_cuenta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    presupuesto DECIMAL(10,2) NOT NULL,
+    estado INT DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_cuenta_usuario 
+        FOREIGN KEY (usuario_id)
+        REFERENCES tbl_usuarios(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- =====================================================================
+-- TABLA: tbl_gasto
+-- Cada gasto pertenece a una cuenta y tiene una categoría
+-- =====================================================================
+CREATE TABLE tbl_gasto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cuenta_id INT NOT NULL,
+    descripcion VARCHAR(255) NOT NULL,
+    monto DECIMAL(10,2) NOT NULL,
+    fecha DATE NOT NULL,
+    tipo_gasto_id INT NOT NULL,
+
+    CONSTRAINT fk_gasto_cuenta
+        FOREIGN KEY (cuenta_id)
+        REFERENCES tbl_cuenta(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    
+    CONSTRAINT fk_gasto_categoria
+        FOREIGN KEY (tipo_gasto_id)
+        REFERENCES tipo_gasto(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+INSERT INTO tipo_gasto (nombre) VALUES
+
+-- =======================
+-- NECESIDADES
+-- =======================
+('Arriendo'),
+('Servicios públicos'),
+('Internet'),
+('Mercado'),
+('Alimentación básica'),
+('Transporte público'),
+('Combustible'),
+('Mantenimiento del vehículo'),
+('Salud'),
+('Medicamentos'),
+('EPS / Seguros médicos'),
+('Educación'),
+('Cursos obligatorios / formación profesional'),
+('Material académico'),
+('Vestimenta básica'),
+('Herramientas de trabajo esenciales'),
+
+-- =======================
+-- GUSTOS
+-- =======================
+('Restaurantes'),
+('Domicilios'),
+('Streaming (Netflix, Spotify, etc.)'),
+('Cine / Entretenimiento'),
+('Videojuegos'),
+('Compras personales'),
+('Ropa de moda'),
+('Electrónicos'),
+('Viajes'),
+('Gimnasio'),
+('Hobbies'),
+('Barbería / peluquería premium'),
+('Spa / estética');
+

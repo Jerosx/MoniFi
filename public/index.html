@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moni-Fi</title>
-    <link rel="stylesheet" href="style/loggin_style.css">
+    <link rel="stylesheet" href="../views/style/loggin_style.css">
+    <link rel="icon" href="../views/character/favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
 
     <h1 class="login-title">Bienvenido a Moni-Fi</h1>
 
     <div class = "login_form_container">
-        <form action="..\controllers\process\process_user_management.php" method="POST">
+        <form action="..\controllers\process\process_login.php" method="POST">
 
-            <div class="username">
-                <label for="username">Usuario </label>
-                <input type="text" placeholder="Inserte su usuario." id="username" name="username" required>
+            <div class="email">
+                <label for="email">Email </label>
+                <input type="text" placeholder="Inserte su usuario." id="email" name="email" required>
             </div>
 
             <div class="password">
@@ -24,7 +25,7 @@
             </div>
 
             <div class="register">
-                <a href="register_user.html">¿No tienes una cuenta?</a>
+                <a href="../public/register_user.html">¿No tienes una cuenta?</a>
             </div>
 
             <div class="input_button">
@@ -33,7 +34,7 @@
         </form>
     </div>
 
-    <img src="character/like.png" alt="Decoración" class="corner-image">
+    <img src="../views/character/quieto.png" alt="Decoración" class="corner-image">
 
 
 </body>
