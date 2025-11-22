@@ -15,92 +15,137 @@ $accounts = get_user_accounts($con);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mis Cuentas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Cuentas - Moni-Fi</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-
-<div class="container mt-5">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <h2 class="mb-4">Crear nueva cuenta</h2>
+    <link rel="stylesheet" href="../views/style/main.css">
+    <link rel="icon" href="../views/character/favicon/favicon.ico" type="image/x-icon">
+    
+</head>
+<body>
 
-    <form action="../controllers/process/accounts/create_account.php" method="POST" class="card p-4 shadow-sm mb-5">
-        <div class="mb-3">
-            <label class="form-label">Nombre de la cuenta</label>
-            <input type="text" name="account_name" class="form-control" required>
+<div class="container main-container">
+    
+    <!-- Header -->
+    <div class="header-section">
+        <h1><i class="fas fa-wallet"></i> Moni-Fi</h1>
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i> Bienvenido
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label class="form-label">Presupuesto</label>
-            <input type="number" step="0.01" name="budget" class="form-control" required>
-        </div>
+    <!-- Crear Nueva Cuenta -->
+    <div class="create-card">
+        <h2><i class="fas fa-plus-circle"></i> Crear Nueva Cuenta</h2>
 
-        <button class="btn btn-primary w-100">Crear cuenta</button>
-    </form>
+        <form action="../controllers/process/accounts/create_account.php" method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label"><i class="fas fa-tag"></i> Nombre de la cuenta</label>
+                    <input type="text" name="account_name" class="form-control" placeholder="Ej: Cuenta Personal" required>
+                </div>
 
-    <h2 class="mb-3">Mis cuentas</h2>
-
-    <?php if ($accounts && $accounts->num_rows > 0): ?>
-        <?php while ($acc = $accounts->fetch_assoc()): ?>
-
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body">
-
-                    <h5 class="card-title"><?= $acc["nombre"] ?></h5>
-                    <p><strong>Presupuesto:</strong> $<?= number_format($acc["presupuesto"], 2) ?></p>
-                    <p><strong>Estado:</strong> <?= $acc["estado"] == 1 ? "Activa" : "Inactiva" ?></p>
-
-                    <hr>
-
-                    <!-- Formulario Editar -->
-                    <form action="../controllers/process/accounts/update_account.php" method="POST" class="row g-2">
-                        <input type="hidden" name="id" value="<?= $acc["id"] ?>">
-
-                        <div class="col-md-4">
-                            <input type="text" name="name" class="form-control" value="<?= $acc["nombre"] ?>" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <input type="number" step="0.01" name="budget" class="form-control" value="<?= $acc["presupuesto"] ?>" required>
-                        </div>
-
-                        <div class="col-md-2">
-                            <select name="state" class="form-select">
-                                <option value="1" <?= $acc["estado"] == 1 ? "selected" : "" ?>>Activa</option>
-                                <option value="0" <?= $acc["estado"] == 0 ? "selected" : "" ?>>Inactiva</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 d-grid">
-                            <button class="btn btn-warning">Actualizar</button>
-                        </div>
-                    </form>
-
-                    <!-- Formulario Eliminar -->
-                    <form action="../controllers/process/accounts/delete_account.php"
-                          method="POST" 
-                          class="mt-2"
-                          onsubmit="return confirm('¿Seguro de eliminar esta cuenta?');">
-
-                        <input type="hidden" name="id" value="<?= $acc["id"] ?>">
-                        <button class="btn btn-danger w-100">Eliminar</button>
-                    </form>
-
+                <div class="col-md-6 mb-3">
+                    <label class="form-label"><i class="fas fa-dollar-sign"></i> Presupuesto</label>
+                    <input type="number" step="0.01" name="budget" class="form-control" placeholder="0.00" required>
                 </div>
             </div>
 
-        <?php endwhile; ?>
-    <?php else: ?>
-        <p class="text-secondary">No tienes cuentas registradas.</p>
-    <?php endif; ?>
+            <button class="btn btn-primary w-100">
+                <i class="fas fa-check-circle"></i> Crear Cuenta
+            </button>
+        </form>
+    </div>
 
-    <form action="../controllers/close_session.php">
-        <button class="btn btn-danger w-100">Cerrar sesion</button>
-    </form>
+    <!-- Mis Cuentas -->
+    <div class="accounts-section">
+        <h2><i class="fas fa-list"></i> Mis Cuentas</h2>
+
+        <?php if ($accounts && $accounts->num_rows > 0): ?>
+            <?php while ($acc = $accounts->fetch_assoc()): ?>
+
+                <div class="account-card">
+                    <div class="account-header">
+                        <h3 class="account-title">
+                            <i class="fas fa-credit-card"></i>
+                            <?= htmlspecialchars($acc["nombre"]) ?>
+                        </h3>
+                        <span class="account-status <?= $acc["estado"] == 1 ? 'status-active' : 'status-inactive' ?>">
+                            <i class="fas fa-circle"></i> <?= $acc["estado"] == 1 ? "Activa" : "Inactiva" ?>
+                        </span>
+                    </div>
+
+                    <div class="account-budget">
+                        $<?= number_format($acc["presupuesto"], 2) ?>
+                    </div>
+
+                    <div class="account-actions">
+                        <!-- Formulario Editar -->
+                        <form action="../controllers/process/accounts/update_account.php" method="POST" class="row g-2 mb-2">
+                            <input type="hidden" name="id" value="<?= $acc["id"] ?>">
+
+                            <div class="col-md-4">
+                                <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($acc["nombre"]) ?>" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <input type="number" step="0.01" name="budget" class="form-control" value="<?= $acc["presupuesto"] ?>" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <select name="state" class="form-select">
+                                    <option value="1" <?= $acc["estado"] == 1 ? "selected" : "" ?>>Activa</option>
+                                    <option value="0" <?= $acc["estado"] == 0 ? "selected" : "" ?>>Inactiva</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 d-grid">
+                                <button class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> Actualizar
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Formulario Eliminar -->
+                        <form action="../controllers/process/accounts/delete_account.php"
+                              method="POST" 
+                              onsubmit="return confirm('¿Estás seguro de eliminar esta cuenta?');">
+
+                            <input type="hidden" name="id" value="<?= $acc["id"] ?>">
+                            <button class="btn btn-danger w-100">
+                                <i class="fas fa-trash-alt"></i> Eliminar Cuenta
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            <?php endwhile; ?>
+        <?php else: ?>
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <p>No tienes cuentas registradas aún.<br>¡Crea tu primera cuenta para comenzar!</p>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Cerrar Sesión -->
+    <div class="logout-section">
+        <form action="../controllers/close_session.php">
+            <button class="btn btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </form>
+    </div>
 
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
