@@ -6,12 +6,30 @@ include_once(DB_PATH);
 include_once(DB_METADATA_PATH);
 
 
+function get_logged_user_id($con, $email) 
+{
+
+    $sql = "SELECT " . Usuario::ID . " 
+            FROM " . Usuario::TBL_NAME . "
+            WHERE " . Usuario::EMAIL . " = ?";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $result = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return $result[Usuario::ID] ?? null;
+}
+
+
 function get_password_hash($con, $email) {
     $email = mysqli_real_escape_string($con, $email);
 
-    $sql = "SELECT " . TblUsuarios::CLAVE_USUARIO . "
-            FROM " . TblUsuarios::TBL_NAME . "
-            WHERE " . TblUsuarios::EMAIL . " = ?";
+    $sql = "SELECT " . Usuario::CONTRASENA . "
+            FROM " . Usuario::TBL_NAME . "
+            WHERE " . Usuario::EMAIL . " = ?";
 
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -19,7 +37,7 @@ function get_password_hash($con, $email) {
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        return $result->fetch_assoc()[TblUsuarios::CLAVE_USUARIO];
+        return $result->fetch_assoc()[Usuario::CONTRASENA];
     }
 
     return null;
@@ -29,9 +47,9 @@ function get_password_hash($con, $email) {
 function email_exists($con, $email) {
     $email = mysqli_real_escape_string($con, $email);
 
-    $sql = "SELECT " . TblUsuarios::ID . "
-            FROM " . TblUsuarios::TBL_NAME . "
-            WHERE " . TblUsuarios::EMAIL . " = ?";
+    $sql = "SELECT " . Usuario::ID . "
+            FROM " . Usuario::TBL_NAME . "
+            WHERE " . Usuario::EMAIL . " = ?";
 
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -56,8 +74,12 @@ function validate_credentials($email, $password) {
     $stored_hash = get_password_hash($con, $email);
 
     if ($stored_hash && password_verify($password, $stored_hash)) {
+
         session_start();
-        $_SESSION['email'] = $email;
+
+        $user_id = get_logged_user_id($con, $email);
+
+        $_SESSION['user_id'] = $user_id;
 
         header("Location: ../../views/main.php");
         exit;
@@ -73,10 +95,10 @@ function validate_credentials($email, $password) {
 
 function insert_user($name, $email, $password, $con) {
 
-    $sql = "INSERT INTO " . TblUsuarios::TBL_NAME . " (
-                " . TblUsuarios::NOMBRE . ",
-                " . TblUsuarios::EMAIL . ",
-                " . TblUsuarios::CLAVE_USUARIO . "
+    $sql = "INSERT INTO " . Usuario::TBL_NAME . " (
+                " . Usuario::NOMBRE . ",
+                " . Usuario::EMAIL . ",
+                " . Usuario::CONTRASENA . "
             ) VALUES (?, ?, ?)";
 
     $hashed = password_hash($password, PASSWORD_BCRYPT);
