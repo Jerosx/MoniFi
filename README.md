@@ -1,9 +1,4 @@
 
----
-
-````md
-<div align="center">
-
 # 🟦 MONIFI  
 ### *Sistema de Gestión de Finanzas Personales*
 
