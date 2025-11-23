@@ -1,110 +1,154 @@
-```md
-# 🟦 Monifi — Sistema de Gestión de Finanzas Personales  
-### *Backend PHP + MySQL | Arquitectura modular | Seguridad y escalabilidad*
-
-Monifi es una plataforma diseñada para la **gestión inteligente de cuentas personales**, construida con un enfoque en arquitectura limpia, escalabilidad y buenas prácticas backend.  
-El sistema implementa autenticación segura, separación de responsabilidades y un modelo basado en metadatos para mapear la base de datos de manera clara y profesional.
 
 ---
 
-## 🚀 Características Principales
+````md
+<div align="center">
+
+# 🟦 MONIFI  
+### *Sistema de Gestión de Finanzas Personales*
+
+**Backend PHP + MySQL · Arquitectura Modular · Seguridad y Escalabilidad**
+
+</div>
+
+---
+
+## ✨ Descripción del Proyecto
+
+**Monifi** es una plataforma diseñada para la gestión inteligente de cuentas personales.  
+Su arquitectura está construida con un enfoque en **claridad, escalabilidad y buenas prácticas backend**, utilizando PHP nativo organizado en una estructura modular con controladores, modelos, vistas y metadatos de base de datos.
+
+Monifi refleja un backend real listo para expandirse hacia movimientos financieros, reportes y más módulos avanzados.
+
+---
+
+## 🚀 Funcionalidades Principales
 
 ### 🔐 Autenticación Segura
-- Manejo de sesión robusto.
-- Validación estricta de usuario.
-- Protección ante accesos no autorizados.
+- Validación de credenciales
+- Manejo de sesión robusto
+- Restricción de rutas privadas
 
 ### 🗂️ Gestión de Cuentas
-- Consulta de cuentas asociadas al usuario autenticado.
-- Acceso a presupuesto, nombre, estado y demás información relevante.
-- Estructura lista para expandirse a movimientos, reportes y más.
+- Crear, actualizar y eliminar cuentas
+- Visualizar cuentas por usuario autenticado
+- Manejo de presupuesto, nombre y estado por cuenta
 
 ### 🧱 Arquitectura Profesional
-- Uso de **metaclases PHP** para representar tablas y columnas.
-- Separación clara entre configuración, conexión, lógica y vistas.
-- Mantenimiento fácil y modificaciones rápidas gracias al modelo de constantes.
-
-### 🛡️ Buenas Prácticas Aplicadas
-- Queries preparadas.
-- Rutas absolutas centralizadas.
-- Código modular y mantenible.
-- Organización basada en un mini MVC.
+- Directorios limpios por responsabilidad
+- Metaclases PHP para representar tablas/columnas
+- Mini MVC desarrollado a mano
+- Código mantenible y escalable
 
 ---
 
 ## 🛠️ Tecnologías Usadas
+
 - **PHP 8+**
 - **MySQL / MariaDB**
 - **Bootstrap**
-- **MVC ligero + metadatos**
+- **MVC Ligero**
+- **Metadatos PHP**
 
 ---
 
 ## 📁 Estructura del Proyecto
-```
-..
 
+```bash
+MONIFI/
+├── controllers/
+│   └── process/
+│       ├── accounts/
+│       │   ├── create_account.php
+│       │   ├── delete_account.php
+│       │   ├── update_account.php
+│       │   └── accounts_management.php
+│       ├── process_login.php
+│       ├── process_register_user.php
+│       ├── close_session.php
+│       ├── user_management.php
+│       └── validate_exist_session.php
+│
+├── model/
+│   ├── database/
+│   │   ├── metadata/
+│   │   ├── constantes.php
+│   │   └── connection.php
+│   ├── database.txt
+│   └── ...
+│
+├── public/
+│   ├── index.html
+│   └── register_user.html
+│
+├── views/
+│   ├── character/
+│   ├── partials/
+│   ├── style/
+│   └── main.php
+│
+├── config.php
+├── notas.txt
+├── .env
+├── .gitignore
+└── README.md
 ````
-
----
-
-## 📊 Base de Datos
-La base de datos se organiza en torno a:
-
-- **Usuarios**
-- **Cuentas**
-- **Estados**
-- (Opcional) Movimientos financieros
-
-Toda la estructura se maneja mediante metaclases en PHP, facilitando mantenibilidad y coherencia entre backend y BD.
-
----
-
-## 🧪 Funcionalidades Implementadas
-
-...
 
 ---
 
 ## 🧭 Cómo Ejecutarlo
 
-### 1. Clonar el repositorio
+### 1️⃣ Clonar el repositorio
+
 ```bash
-git clone https://github.com/tu-usuario/MoniFi
-````
+git clone https://github.com/tu-usuario/monifi.git
+```
 
-### 2. Configurar `config.php`
+### 2️⃣ Configurar `config.php`
 
-Ajusta credenciales, rutas y constantes del sistema.
+Define rutas y credenciales.
 
-### 3. Importar el archivo SQL
+### 3️⃣ Importar la base de datos
 
-Dentro de la carpeta `/database/`.
+Ubicada en:
 
-### 4. Iniciar el servidor PHP
+```
+/model/database/database.txt
+```
+
+### 4️⃣ Iniciar el servidor PHP
 
 ```bash
 php -S localhost:8000
 ```
 
-### 5. Abrir en el navegador
+### 5️⃣ Abrir en el navegador
 
 ```
-http://localhost:8000
+http://localhost:8000/public/index.html
 ```
 
 ---
 
-## 🤝 Aporte Personal al Proyecto
+## 👨‍💻 Aporte Personal
 
-Este proyecto fue desarrollado por **Jeronimo Buitrago Serna** como una muestra de:
+Este proyecto fue desarrollado por **Jeronimo Buitrago Serna** como una demostración de:
 
-* Dominio de conceptos backend con PHP.
-* Diseño de arquitecturas claras y escalables.
-* Uso de principios de código limpio.
-* Modelado profesional de bases de datos.
-* Creación de sistemas reales aplicables en empresas.
+* Arquitectura backend limpia con PHP
+* Diseño de sistemas escalables
+* Buenas prácticas en autenticación y manejo de sesiones
+* Modelado de base de datos y metadatos
+* Organización profesional del código
 
-Monifi demuestra mi capacidad para construir sistemas backend robustos, organizados y preparados para escalar.
+Monifi es una muestra sólida de mis capacidades como **Backend / Full Stack Developer Junior**.
+
+---
+
+<div align="center">
+
+✨ *Gracias por ver este proyecto*
+
+</div>
+```
 
 ---
