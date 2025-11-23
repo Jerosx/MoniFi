@@ -1,118 +1,71 @@
 <?php
-
-$rootPath = realpath(__DIR__ . '/..');
-include_once($rootPath . '/config.php');
+$root = realpath(__DIR__ . '/..');
+include_once($root . "/config.php");
 include_once(DB_PATH);
 include_once(DB_METADATA_PATH);
 
-/* ============================================================
-   Obtener ID real del usuario logueado
-============================================================ */
-function get_logged_user_id($con) 
-{
-    if (!isset($_SESSION['usuario'])) {
-        return null;
+
+function get_logged_user_id() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
-
-    $email = $_SESSION['usuario'];
-
-    $sql = "SELECT " . TblUsuarios::ID . " 
-            FROM " . TblUsuarios::TBL_NAME . "
-            WHERE " . TblUsuarios::EMAIL . " = ?";
-
-    $stmt = $con->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-
-    $result = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    return $result[TblUsuarios::ID] ?? null;
+    return $_SESSION['user_id'] ?? null;
 }
 
+function get_user_accounts($con) {
+    $user_id = get_logged_user_id();
 
-/* ============================================================
-   Crear nueva cuenta
-============================================================ */
-function create_new_money_account($con, $name, $budget)
-{
-    $user_id = get_logged_user_id($con);
-    if (!$user_id) return false;
-
-    $sql = "INSERT INTO " . TblCuenta::TBL_NAME . " (
-                " . TblCuenta::NOMBRE . ",
-                " . TblCuenta::PRESUPUESTO . ",
-                " . TblCuenta::USUARIO_ID . ",
-                " . TblCuenta::ESTADO . "
-            ) VALUES (?, ?, ?, 1)";
-
-    $stmt = $con->prepare($sql);
-    $stmt->bind_param("sdi", $name, $budget, $user_id);
-
-    $success = $stmt->execute();
-    $stmt->close();
-
-    return $success;
-}
-
-
-/* ============================================================
-   Obtener cuentas del usuario
-============================================================ */
-function get_user_accounts($con)
-{
-    $user_id = get_logged_user_id($con);
-    if (!$user_id) return null;
-
-    $sql = "SELECT * FROM " . TblCuenta::TBL_NAME . "
-            WHERE " . TblCuenta::USUARIO_ID . " = ?";
+    $sql = "SELECT 
+                c.id,
+                c.nombre,
+                c.presupuesto,
+                c.estado_id AS estado
+            FROM " . Cuenta::TBL_NAME . " c
+            WHERE c.usuario_id = ?
+            ORDER BY c.fecha_creacion DESC";
 
     $stmt = $con->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-
-    return $result;
+    return $stmt->get_result();
 }
 
+function create_new_money_account($con, $name, $budget) {
+    $user_id = get_logged_user_id();
 
-/* ============================================================
-   Actualizar cuenta
-============================================================ */
-function update_account($con, $id, $name, $budget, $state)
-{
-    $sql = "UPDATE " . TblCuenta::TBL_NAME . " SET "
-         . TblCuenta::NOMBRE . " = ?, "
-         . TblCuenta::PRESUPUESTO . " = ?, "
-         . TblCuenta::ESTADO . " = ? 
-           WHERE " . TblCuenta::ID . " = ?";
+    $sql = "INSERT INTO " . Cuenta::TBL_NAME . " (
+                usuario_id,
+                nombre,
+                presupuesto,
+                estado_id
+            ) VALUES (?, ?, ?, 1)";
 
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("sdii", $name, $budget, $state, $id);
-
-    $success = $stmt->execute();
-    $stmt->close();
-
-    return $success;
+    $stmt->bind_param("isd", $user_id, $name, $budget);
+    return $stmt->execute();
 }
 
+function update_account($con, $id, $name, $budget, $state) {
+    $user_id = get_logged_user_id();
 
-/* ============================================================
-   Eliminar
-============================================================ */
-function delete_account($con, $id)
-{
-    $sql = "DELETE FROM " . TblCuenta::TBL_NAME . "
-            WHERE " . TblCuenta::ID . " = ?";
+    $sql = "UPDATE " . Cuenta::TBL_NAME . "
+            SET nombre = ?, presupuesto = ?, estado_id = ?
+            WHERE id = ? AND usuario_id = ?";
 
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("i", $id);
+    $stmt->bind_param("sdiii", $name, $budget, $state, $id, $user_id);
+    return $stmt->execute();
+}
 
-    $success = $stmt->execute();
-    $stmt->close();
+function delete_account($con, $id) {
+    $user_id = get_logged_user_id();
 
-    return $success;
+    $sql = "DELETE FROM " . Cuenta::TBL_NAME . "
+            WHERE id = ? AND usuario_id = ?";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ii", $id, $user_id);
+    return $stmt->execute();
 }
 
 ?>

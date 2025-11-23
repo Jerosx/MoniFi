@@ -7,8 +7,8 @@ $budget = trim($_POST['budget'] ?? '');
 $con = create_conection();
 
 if (create_new_money_account($con, $name, $budget)) {
-    echo "<script>alert('Cuenta creada.'); window.location.href='../../../public/main.php';</script>";
+    echo "<script>alert('Cuenta creada.'); window.location.href='../../../views/main.php';</script>";
 } else {
-    echo "<script>alert('Error.'); window.location.href='../../../public/main.php';</script>";
+    echo "<script>alert('Error.'); window.location.href='../../../views/main.php';</script>";
 }
 ?>
