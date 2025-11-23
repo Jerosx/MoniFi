@@ -1,11 +1,13 @@
 -- =====================================================================
--- CREAR BASE DE DATOS
+-- CREAR BASE DE DATOS (Opcional)
 -- =====================================================================
+-- CREATE DATABASE control_gastos;
+-- USE control_gastos;
 
 -- =====================================================================
--- TABLA: tbl_usuarios
+-- TABLA: usuario
 -- =====================================================================
-CREATE TABLE tbl_usuarios (
+CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
@@ -14,93 +16,121 @@ CREATE TABLE tbl_usuarios (
 );
 
 -- =====================================================================
--- TABLA: tipo_gasto
+-- TABLA: estado (Para cuentas)
 -- =====================================================================
-CREATE TABLE tipo_gasto (
+CREATE TABLE estado (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
+    nombre VARCHAR(50) NOT NULL
 );
 
+INSERT INTO estado (id, nombre) VALUES
+(1, 'Activo'),
+(2, 'Inactivo');
+
 -- =====================================================================
--- TABLA: tbl_cuenta
--- Cada cuenta pertenece a un usuario y representa un presupuesto/salario
+-- TABLA: cuenta
+-- Cada cuenta pertenece a un usuario y tiene un estado
 -- =====================================================================
-CREATE TABLE tbl_cuenta (
+CREATE TABLE cuenta (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     presupuesto DECIMAL(10,2) NOT NULL,
-    estado INT DEFAULT 1,
+    estado_id INT NOT NULL DEFAULT 1,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    CONSTRAINT fk_cuenta_usuario 
-        FOREIGN KEY (usuario_id)
-        REFERENCES tbl_usuarios(id)
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    FOREIGN KEY (estado_id) REFERENCES estado(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- =====================================================================
+-- TABLA: categoria_gasto (Solo 2 categorías principales)
+-- =====================================================================
+CREATE TABLE categoria_gasto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+INSERT INTO categoria_gasto (id, nombre) VALUES
+(1, 'Necesidades'),
+(2, 'Gustos');
+
+-- =====================================================================
+-- TABLA: subcategoria_gasto (Tipos de gasto: Arriendo, Mercado, Cine, etc.)
+-- =====================================================================
+CREATE TABLE subcategoria_gasto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoria_id INT NOT NULL,
+    nombre VARCHAR(150) NOT NULL,
+
+    FOREIGN KEY (categoria_id) REFERENCES categoria_gasto(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 -- =====================================================================
--- TABLA: tbl_gasto
--- Cada gasto pertenece a una cuenta y tiene una categoría
+-- INSERTAR SUBCATEGORÍAS DE GASTO
+-- NECESIDADES (categoria_id = 1)
 -- =====================================================================
-CREATE TABLE tbl_gasto (
+INSERT INTO subcategoria_gasto (categoria_id, nombre) VALUES
+(1, 'Arriendo'),
+(1, 'Servicios públicos'),
+(1, 'Internet'),
+(1, 'Mercado'),
+(1, 'Alimentación básica'),
+(1, 'Transporte público'),
+(1, 'Combustible'),
+(1, 'Mantenimiento del vehículo'),
+(1, 'Salud'),
+(1, 'Medicamentos'),
+(1, 'EPS / Seguros médicos'),
+(1, 'Educación'),
+(1, 'Cursos obligatorios / formación profesional'),
+(1, 'Material académico'),
+(1, 'Vestimenta básica'),
+(1, 'Herramientas de trabajo esenciales');
+
+-- =====================================================================
+-- GUSTOS (categoria_id = 2)
+-- =====================================================================
+INSERT INTO subcategoria_gasto (categoria_id, nombre) VALUES
+(2, 'Restaurantes'),
+(2, 'Domicilios'),
+(2, 'Streaming (Netflix, Spotify, etc.)'),
+(2, 'Cine / Entretenimiento'),
+(2, 'Videojuegos'),
+(2, 'Compras personales'),
+(2, 'Ropa de moda'),
+(2, 'Electrónicos'),
+(2, 'Viajes'),
+(2, 'Gimnasio'),
+(2, 'Hobbies'),
+(2, 'Barbería / peluquería premium'),
+(2, 'Spa / estética');
+
+-- =====================================================================
+-- TABLA: gasto
+-- Cada gasto pertenece a una cuenta y a una SUBCATEGORÍA
+-- =====================================================================
+CREATE TABLE gasto (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cuenta_id INT NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
     monto DECIMAL(10,2) NOT NULL,
     fecha DATE NOT NULL,
-    tipo_gasto_id INT NOT NULL,
 
-    CONSTRAINT fk_gasto_cuenta
-        FOREIGN KEY (cuenta_id)
-        REFERENCES tbl_cuenta(id)
+    subcategoria_gasto_id INT NOT NULL,
+
+    FOREIGN KEY (cuenta_id) REFERENCES cuenta(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    
-    CONSTRAINT fk_gasto_categoria
-        FOREIGN KEY (tipo_gasto_id)
-        REFERENCES tipo_gasto(id)
+
+    FOREIGN KEY (subcategoria_gasto_id) REFERENCES subcategoria_gasto(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
-
-INSERT INTO tipo_gasto (nombre) VALUES
-
--- =======================
--- NECESIDADES
--- =======================
-('Arriendo'),
-('Servicios públicos'),
-('Internet'),
-('Mercado'),
-('Alimentación básica'),
-('Transporte público'),
-('Combustible'),
-('Mantenimiento del vehículo'),
-('Salud'),
-('Medicamentos'),
-('EPS / Seguros médicos'),
-('Educación'),
-('Cursos obligatorios / formación profesional'),
-('Material académico'),
-('Vestimenta básica'),
-('Herramientas de trabajo esenciales'),
-
--- =======================
--- GUSTOS
--- =======================
-('Restaurantes'),
-('Domicilios'),
-('Streaming (Netflix, Spotify, etc.)'),
-('Cine / Entretenimiento'),
-('Videojuegos'),
-('Compras personales'),
-('Ropa de moda'),
-('Electrónicos'),
-('Viajes'),
-('Gimnasio'),
-('Hobbies'),
-('Barbería / peluquería premium'),
-('Spa / estética');
-

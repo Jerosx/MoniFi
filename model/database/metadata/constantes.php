@@ -1,97 +1,63 @@
 <?php
-# Modulo que contiene en constantes la estructura de la base de datos
+# Clases que representan la estructura de las tablas de la base de datos.
 
 
-class TblUsuarios{
-    /*Clase que contiene constantes que representan cada una de las tablas de la
-    base de datos y sus respectivos campos.*/
-
-    const TBL_NAME = 'tbl_usuarios';
-    /** */
+class Usuario {
+    const TBL_NAME = 'usuario';
 
     const ID = 'id';
-    /** */
-
     const NOMBRE = 'nombre';
-    /** */
-
     const EMAIL = 'email';
-    /** */
-
-    const CLAVE_USUARIO = 'contrasena';
-    /** */
-
-    const FECH_CREACION = 'fecha_creacion';
-    /** */
-};
-
-
-class TblCuenta{
-    /*Clase que contiene constantes que representan cada una de las tablas de la
-    base de datos y sus respectivos campos.*/
-
-    const TBL_NAME = 'tbl_cuenta';
-    /** */
-
-    const ID = 'id';
-    /** */
-
-    const USUARIO_ID = 'usuario_id';
-    /** */
-
-    const NOMBRE = 'nombre';
-    /** */
-
-    const PRESUPUESTO = 'presupuesto';
-    /** */
-
-    const ESTADO = 'estado';
-    /** */
-
+    const CONTRASENA = 'contrasena';
     const FECHA_CREACION = 'fecha_creacion';
-    /** */
-};
+}
 
 
-class TblGasto{
-    /*Clase que contiene constantes que representan cada una de las tablas de la
-    base de datos y sus respectivos campos.*/
-
-    const TBL_NAME = 'tbl_gasto';
-    /** */
+class Estado {
+    const TBL_NAME = 'estado';
 
     const ID = 'id';
-    /** */
-
-    const CUENTA_ID = 'cuenta_id';
-    /** */
-
-    const DESCRIPCION = 'descripcion';
-    /** */
-
-    const MONTO = 'monto';
-    /** */
-
-    const FECHA = 'fecha';
-    /** */
-
-    const TIPO_GASTO_ID = 'tipo_gasto_id';
-    /** */
-};
-
-
-class TblTipoGasto{
-    /*Clase que contiene constantes que representan cada una de las tablas de la
-    base de datos y sus respectivos campos.*/
-
-    const TBL_NAME = 'tipo_gasto';
-    /** */
-
-    const ID = 'id';
-    /** */
-
     const NOMBRE = 'nombre';
-    /** */
-};
+}
 
+
+class Cuenta {
+    const TBL_NAME = 'cuenta';
+
+    const ID = 'id';
+    const USUARIO_ID = 'usuario_id';
+    const NOMBRE = 'nombre';
+    const PRESUPUESTO = 'presupuesto';
+    const ESTADO_ID = 'estado_id';
+    const FECHA_CREACION = 'fecha_creacion';
+}
+
+
+class CategoriaGasto {
+    const TBL_NAME = 'categoria_gasto';
+
+    const ID = 'id';
+    const NOMBRE = 'nombre';
+}
+
+
+class SubcategoriaGasto {
+    const TBL_NAME = 'subcategoria_gasto';
+
+    const ID = 'id';
+    const CATEGORIA_ID = 'categoria_id';
+    const NOMBRE = 'nombre';
+}
+
+
+class Gasto {
+    const TBL_NAME = 'gasto';
+
+    const ID = 'id';
+    const CUENTA_ID = 'cuenta_id';
+    const DESCRIPCION = 'descripcion';
+    const MONTO = 'monto';
+    const FECHA = 'fecha';
+    const SUBCATEGORIA_GASTO_ID = 'subcategoria_gasto_id';
+}
 ?>
