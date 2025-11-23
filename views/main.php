@@ -1,12 +1,15 @@
 <?php
 session_start();
 
+include('../controllers/validate_exist_sesion.php');
+
 $root = realpath(__DIR__ . '/..');
 
 include_once($root . "/config.php");
 include_once(DB_PATH);
 include_once(DB_METADATA_PATH);
-include_once($root . "/controllers/accounts_management.php");
+include('../controllers/accounts_management.php');
+
 
 $con = create_conection();
 $accounts = get_user_accounts($con);
@@ -18,20 +21,16 @@ $accounts = get_user_accounts($con);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Cuentas - Moni-Fi</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <link rel="stylesheet" href="../views/style/main.css">
     <link rel="icon" href="../views/character/favicon/favicon.ico" type="image/x-icon">
-    
 </head>
 <body>
 
 <div class="container main-container">
     
-    <!-- Header -->
     <div class="header-section">
         <h1><i class="fas fa-wallet"></i> Moni-Fi</h1>
         <div class="user-info">
@@ -39,7 +38,6 @@ $accounts = get_user_accounts($con);
         </div>
     </div>
 
-    <!-- Crear Nueva Cuenta -->
     <div class="create-card">
         <h2><i class="fas fa-plus-circle"></i> Crear Nueva Cuenta</h2>
 
@@ -47,12 +45,12 @@ $accounts = get_user_accounts($con);
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label"><i class="fas fa-tag"></i> Nombre de la cuenta</label>
-                    <input type="text" name="account_name" class="form-control" placeholder="Ej: Cuenta Personal" required>
+                    <input type="text" name="account_name" class="form-control" required>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label"><i class="fas fa-dollar-sign"></i> Presupuesto</label>
-                    <input type="number" step="0.01" name="budget" class="form-control" placeholder="0.00" required>
+                    <input type="number" step="0.01" name="budget" class="form-control" required>
                 </div>
             </div>
 
@@ -62,7 +60,6 @@ $accounts = get_user_accounts($con);
         </form>
     </div>
 
-    <!-- Mis Cuentas -->
     <div class="accounts-section">
         <h2><i class="fas fa-list"></i> Mis Cuentas</h2>
 
@@ -85,7 +82,6 @@ $accounts = get_user_accounts($con);
                     </div>
 
                     <div class="account-actions">
-                        <!-- Formulario Editar -->
                         <form action="../controllers/process/accounts/update_account.php" method="POST" class="row g-2 mb-2">
                             <input type="hidden" name="id" value="<?= $acc["id"] ?>">
 
@@ -111,9 +107,7 @@ $accounts = get_user_accounts($con);
                             </div>
                         </form>
 
-                        <!-- Formulario Eliminar -->
-                        <form action="../controllers/process/accounts/delete_account.php"
-                              method="POST" 
+                        <form action="../controllers/process/accounts/delete_account.php" method="POST"
                               onsubmit="return confirm('¿Estás seguro de eliminar esta cuenta?');">
 
                             <input type="hidden" name="id" value="<?= $acc["id"] ?>">
@@ -128,12 +122,11 @@ $accounts = get_user_accounts($con);
         <?php else: ?>
             <div class="empty-state">
                 <i class="fas fa-folder-open"></i>
-                <p>No tienes cuentas registradas aún.<br>¡Crea tu primera cuenta para comenzar!</p>
+                <p>No tienes cuentas registradas aún.<br>¡Crea tu primera cuenta!</p>
             </div>
         <?php endif; ?>
     </div>
 
-    <!-- Cerrar Sesión -->
     <div class="logout-section">
         <form action="../controllers/close_session.php">
             <button class="btn btn-logout">
@@ -144,7 +137,6 @@ $accounts = get_user_accounts($con);
 
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
