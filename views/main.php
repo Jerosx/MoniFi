@@ -10,7 +10,6 @@ include_once(DB_PATH);
 include_once(DB_METADATA_PATH);
 include('../controllers/accounts_management.php');
 
-
 $con = create_conection();
 $accounts = get_user_accounts($con);
 ?>
@@ -31,14 +30,16 @@ $accounts = get_user_accounts($con);
 
 <div class="container main-container">
     
-    <div class="header-section">
+    <!-- Header -->
+    <div class="header-section d-flex justify-content-between align-items-center">
         <h1><i class="fas fa-wallet"></i> Moni-Fi</h1>
         <div class="user-info">
             <i class="fas fa-user-circle"></i> Bienvenido
         </div>
     </div>
 
-    <div class="create-card">
+    <!-- Crear nueva cuenta -->
+    <div class="create-card mb-4">
         <h2><i class="fas fa-plus-circle"></i> Crear Nueva Cuenta</h2>
 
         <form action="../controllers/process/accounts/create_account.php" method="POST">
@@ -60,18 +61,21 @@ $accounts = get_user_accounts($con);
         </form>
     </div>
 
+    <!-- Lista de cuentas -->
     <div class="accounts-section">
         <h2><i class="fas fa-list"></i> Mis Cuentas</h2>
 
         <?php if ($accounts && $accounts->num_rows > 0): ?>
             <?php while ($acc = $accounts->fetch_assoc()): ?>
 
-                <div class="account-card">
-                    <div class="account-header">
+                <div class="account-card mb-4">
+
+                    <div class="account-header d-flex justify-content-between align-items-center">
                         <h3 class="account-title">
                             <i class="fas fa-credit-card"></i>
                             <?= htmlspecialchars($acc["nombre"]) ?>
                         </h3>
+
                         <span class="account-status <?= $acc["estado"] == 1 ? 'status-active' : 'status-inactive' ?>">
                             <i class="fas fa-circle"></i> <?= $acc["estado"] == 1 ? "Activa" : "Inactiva" ?>
                         </span>
@@ -81,55 +85,43 @@ $accounts = get_user_accounts($con);
                         $<?= number_format($acc["presupuesto"], 2) ?>
                     </div>
 
-                    <div class="account-actions">
-                        <form action="../controllers/process/accounts/update_account.php" method="POST" class="row g-2 mb-2">
-                            <input type="hidden" name="id" value="<?= $acc["id"] ?>">
+                    <div class="d-flex gap-2">
 
-                            <div class="col-md-4">
-                                <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($acc["nombre"]) ?>" required>
-                            </div>
+                        <!-- Ver cuenta -->
+                        <a href="account.php?id=<?= $acc["id"] ?>" class="btn btn-secondary w-100">
+                            <i class="fas fa-eye"></i> Ver Cuenta
+                        </a>
 
-                            <div class="col-md-3">
-                                <input type="number" step="0.01" name="budget" class="form-control" value="<?= $acc["presupuesto"] ?>" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <select name="state" class="form-select">
-                                    <option value="1" <?= $acc["estado"] == 1 ? "selected" : "" ?>>Activa</option>
-                                    <option value="0" <?= $acc["estado"] == 0 ? "selected" : "" ?>>Inactiva</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2 d-grid">
-                                <button class="btn btn-warning">
-                                    <i class="fas fa-edit"></i> Actualizar
-                                </button>
-                            </div>
-                        </form>
-
+                        <!-- Eliminar cuenta -->
                         <form action="../controllers/process/accounts/delete_account.php" method="POST"
-                              onsubmit="return confirm('¿Estás seguro de eliminar esta cuenta?');">
-
+                              onsubmit="return confirm('¿Estás seguro de eliminar esta cuenta?');" class="w-100">
+                                
                             <input type="hidden" name="id" value="<?= $acc["id"] ?>">
+
                             <button class="btn btn-danger w-100">
-                                <i class="fas fa-trash-alt"></i> Eliminar Cuenta
+                                <i class="fas fa-trash-alt"></i> Eliminar
                             </button>
                         </form>
                     </div>
+
                 </div>
 
             <?php endwhile; ?>
+
         <?php else: ?>
-            <div class="empty-state">
-                <i class="fas fa-folder-open"></i>
+
+            <div class="empty-state text-center">
+                <i class="fas fa-folder-open fa-3x mb-3"></i>
                 <p>No tienes cuentas registradas aún.<br>¡Crea tu primera cuenta!</p>
             </div>
+
         <?php endif; ?>
     </div>
 
-    <div class="logout-section">
+    <!-- Cerrar sesión -->
+    <div class="logout-section mt-4">
         <form action="../controllers/close_session.php">
-            <button class="btn btn-logout">
+            <button class="btn btn-logout w-100">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </button>
         </form>

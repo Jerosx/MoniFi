@@ -1,16 +1,10 @@
 <?php
 $root = realpath(__DIR__ . '/..');
-include_once($root . "/config.php");
-include_once(DB_PATH);
-include_once(DB_METADATA_PATH);
 
-
-function get_logged_user_id() {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    return $_SESSION['user_id'] ?? null;
-}
+require_once($root . "/config.php");
+require_once(DB_PATH);
+require_once(DB_METADATA_PATH);
+require_once("utils/get_user_id.php");
 
 function get_user_accounts($con) {
     $user_id = get_logged_user_id();
@@ -68,4 +62,16 @@ function delete_account($con, $id) {
     return $stmt->execute();
 }
 
-?>
+function get_account_by_id($con, $id) {
+    $user_id = get_logged_user_id();
+
+    $sql = "SELECT id, nombre, presupuesto, estado_id 
+            FROM " . Cuenta::TBL_NAME . " 
+            WHERE id = ? AND usuario_id = ?
+            LIMIT 1";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ii", $id, $user_id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
