@@ -1,17 +1,32 @@
 <?php
 
+/* ============================================================
+   INCLUDES
+============================================================ */
+
 $rootPath = realpath(__DIR__ . '/..');
+
+// config + conexión
 include_once($rootPath . '/config.php');
 include_once(DB_PATH);
+
+// constantes de metadata de tablas
 include_once(DB_METADATA_PATH);
 
+// función session user id
+require_once("utils/get_user_id.php");
 
+
+/* ============================================================
+   FUNCIONES DE USUARIO
+============================================================ */
+
+
+// Obtener nombre del usuario por ID guardado en la session
 function get_logged_user_name($con)
 {
     $user_id = $_SESSION["user_id"] ?? null;
-    if (!$user_id) {
-        return null;
-    }
+    if (!$user_id) return null;
 
     $sql = "SELECT " . Usuario::NOMBRE . "
             FROM " . Usuario::TBL_NAME . "
@@ -28,9 +43,9 @@ function get_logged_user_name($con)
 }
 
 
-function get_password_hash($con, $email) {
-    $email = mysqli_real_escape_string($con, $email);
-
+// Obtener contraseña hash desde el correo
+function get_password_hash($con, $email)
+{
     $sql = "SELECT " . Usuario::CONTRASENA . "
             FROM " . Usuario::TBL_NAME . "
             WHERE " . Usuario::EMAIL . " = ?";
@@ -38,19 +53,17 @@ function get_password_hash($con, $email) {
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $result = $stmt->get_result();
 
-    if ($result && $result->num_rows > 0) {
-        return $result->fetch_assoc()[Usuario::CONTRASENA];
-    }
+    $result = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
 
-    return null;
+    return $result[Usuario::CONTRASENA] ?? null;
 }
 
 
-function email_exists($con, $email) {
-    $email = mysqli_real_escape_string($con, $email);
-
+// Verificar si el email existe en la BD
+function email_exists($con, $email)
+{
     $sql = "SELECT " . Usuario::ID . "
             FROM " . Usuario::TBL_NAME . "
             WHERE " . Usuario::EMAIL . " = ?";
@@ -58,13 +71,39 @@ function email_exists($con, $email) {
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $result = $stmt->get_result();
 
-    return ($result && $result->num_rows > 0);
+    $result = $stmt->get_result();
+    $exists = ($result && $result->num_rows > 0);
+
+    $stmt->close();
+    return $exists;
 }
 
 
-function validate_credentials($email, $password) {
+// Obtener ID del usuario desde el email (login)
+function get_user_id_by_email($con, $email)
+{
+    $sql = "SELECT " . Usuario::ID . "
+            FROM " . Usuario::TBL_NAME . "
+            WHERE " . Usuario::EMAIL . " = ?";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $result = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return $result[Usuario::ID] ?? null;
+}
+
+
+/* ============================================================
+   LOGIN
+============================================================ */
+
+function validate_credentials($email, $password)
+{
     $con = create_conection();
 
     if (!email_exists($con, $email)) {
@@ -81,8 +120,7 @@ function validate_credentials($email, $password) {
 
         session_start();
 
-        $user_id = get_logged_user_id($con, $email);
-
+        $user_id = get_user_id_by_email($con, $email);
         $_SESSION['user_id'] = $user_id;
 
         header("Location: ../../views/main.php");
@@ -97,8 +135,12 @@ function validate_credentials($email, $password) {
 }
 
 
-function insert_user($name, $email, $password, $con) {
+/* ============================================================
+   REGISTRO
+============================================================ */
 
+function insert_user($name, $email, $password, $con)
+{
     $sql = "INSERT INTO " . Usuario::TBL_NAME . " (
                 " . Usuario::NOMBRE . ",
                 " . Usuario::EMAIL . ",
@@ -110,11 +152,15 @@ function insert_user($name, $email, $password, $con) {
     $stmt = $con->prepare($sql);
     $stmt->bind_param("sss", $name, $email, $hashed);
 
-    return $stmt->execute();
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
 }
 
 
-function register_user($name, $email, $password) {
+function register_user($name, $email, $password)
+{
     $con = create_conection();
 
     if (email_exists($con, $email)) {
@@ -122,7 +168,6 @@ function register_user($name, $email, $password) {
                 alert('Este correo ya está registrado.');
                 window.location.href='../../public/register_user.html';
               </script>";
-        $con->close();
         exit;
     }
 
@@ -131,14 +176,13 @@ function register_user($name, $email, $password) {
                 alert('Usuario creado con éxito');
                 window.location.href='../../public/index.html';
               </script>";
-    } else {
-        echo "<script>
-                alert('Error al registrar usuario');
-                window.location.href='../../public/register_user.html';
-              </script>";
+        exit;
     }
 
-    $con->close();
+    echo "<script>
+            alert('Error al registrar usuario');
+            window.location.href='../../public/register_user.html';
+          </script>";
     exit;
 }
 
