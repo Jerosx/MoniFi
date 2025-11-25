@@ -6,21 +6,25 @@ include_once(DB_PATH);
 include_once(DB_METADATA_PATH);
 
 
-function get_logged_user_id($con, $email) 
+function get_logged_user_name($con)
 {
+    $user_id = $_SESSION["user_id"] ?? null;
+    if (!$user_id) {
+        return null;
+    }
 
-    $sql = "SELECT " . Usuario::ID . " 
+    $sql = "SELECT " . Usuario::NOMBRE . "
             FROM " . Usuario::TBL_NAME . "
-            WHERE " . Usuario::EMAIL . " = ?";
+            WHERE " . Usuario::ID . " = ?";
 
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("s", $email);
+    $stmt->bind_param("i", $user_id);
     $stmt->execute();
 
     $result = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    return $result[Usuario::ID] ?? null;
+    return $result[Usuario::NOMBRE] ?? null;
 }
 
 

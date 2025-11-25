@@ -1,0 +1,518 @@
+/* ============================================
+   ACCOUNTS MAIN PAGE - STYLES
+   ============================================ */
+
+/* Variables CSS (coherentes con account_detail.css) */
+:root {
+    --primary-color: #4e73df;
+    --success-color: #1cc88a;
+    --danger-color: #e74a3b;
+    --warning-color: #f6c23e;
+    --info-color: #36b9cc;
+    --dark-color: #5a5c69;
+    --light-bg: #f8f9fc;
+    --card-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    --card-hover-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.25);
+}
+
+/* Body y Container Principal */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+.header-section {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
+    animation: slideDown 0.5s ease;
+}
+
+.header-section h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-section h1 i {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: var(--dark-color);
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #f8f9fc 0%, #e3e6f0 100%);
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.user-info i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.user-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   CREAR CUENTA SECTION
+   ============================================ */
+.create-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
+    animation: fadeInUp 0.6s ease 0.1s both;
+}
+
+.create-section h2 {
+    color: var(--dark-color);
+    font-weight: 700;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+}
+
+.create-section h2 i {
+    color: var(--success-color);
+}
+
+/* ============================================
+   FORMULARIO
+   ============================================ */
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e3e6f0;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.form-control::placeholder {
+    color: #b7b9cc;
+}
+
+/* ============================================
+   BOTONES
+   ============================================ */
+.btn {
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================
+   ACCOUNTS SECTION
+   ============================================ */
+.accounts-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 25px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+}
+
+.accounts-section h2 {
+    color: var(--dark-color);
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+}
+
+.accounts-section h2 i {
+    color: var(--info-color);
+}
+
+/* Grid de cuentas */
+.accounts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+/* ============================================
+   ACCOUNT CARD (Tarjeta de Cuenta)
+   ============================================ */
+.account-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fc 100%);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    border-left: 5px solid var(--primary-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.account-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(78, 115, 223, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+    transition: all 0.3s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-hover-shadow);
+    border-left-color: var(--success-color);
+}
+
+.account-card:hover::before {
+    transform: translate(30%, -30%) scale(1.2);
+}
+
+/* Header de la cuenta */
+.account-header {
+    margin-bottom: 20px;
+}
+
+.account-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.account-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.account-title i {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+}
+
+/* Estado de la cuenta */
+.account-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+.account-status i {
+    font-size: 0.6rem;
+}
+
+.status-active {
+    background: rgba(28, 200, 138, 0.15);
+    color: var(--success-color);
+}
+
+.status-inactive {
+    background: rgba(231, 74, 59, 0.15);
+    color: var(--danger-color);
+}
+
+/* Presupuesto */
+.account-budget {
+    background: linear-gradient(135deg, var(--info-color) 0%, #2a96a8 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.budget-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.budget-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Acciones de la cuenta */
+.account-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-view {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+    color: white;
+}
+
+.delete-form {
+    margin: 0;
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, var(--danger-color) 0%, #c1362d 100%);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 74, 59, 0.3);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: #858796;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: #d1d3e2;
+    margin-bottom: 25px;
+    display: block;
+}
+
+.empty-state p {
+    font-size: 1.3rem;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.empty-state small {
+    font-size: 1rem;
+}
+
+/* ============================================
+   LOGOUT SECTION
+   ============================================ */
+.logout-section {
+    animation: fadeInUp 0.6s ease 0.3s both;
+}
+
+.btn-logout {
+    background: linear-gradient(135deg, #858796 0%, #60616f 100%);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+.btn-logout:hover {
+    background: linear-gradient(135deg, var(--danger-color) 0%, #c1362d 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(231, 74, 59, 0.3);
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablets */
+@media (max-width: 992px) {
+    .accounts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        padding: 20px;
+    }
+
+    .header-section h1 {
+        font-size: 1.6rem;
+    }
+
+    .user-info {
+        font-size: 0.9rem;
+        padding: 10px 16px;
+    }
+
+    .create-section,
+    .accounts-section {
+        padding: 20px;
+    }
+
+    .accounts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-card {
+        padding: 20px;
+    }
+
+    .budget-amount {
+        font-size: 1.7rem;
+    }
+}
+
+/* Móviles */
+@media (max-width: 576px) {
+    body {
+        padding: 10px 0;
+    }
+
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+
+    .user-info {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .create-section,
+    .accounts-section {
+        padding: 15px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+
+    .account-title {
+        font-size: 1.2rem;
+    }
+
+    .account-actions {
+        flex-direction: column;
+    }
+
+    .btn-view {
+        width: 100%;
+    }
+
+    .btn-delete {
+        width: 100%;
+    }
+
+    .btn-logout {
+        font-size: 1rem;
+        padding: 12px 25px;
+    }
+}

@@ -1,41 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moni-Fi</title>
-    <link rel="stylesheet" href="../views/style/loggin_style.css">
+    <title>Iniciar Sesión - Moni-Fi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../views/style/login_style.css">
     <link rel="icon" href="../views/character/favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
 
-    <h1 class="login-title">Bienvenido a Moni-Fi</h1>
-
-    <div class = "login_form_container">
-        <form action="..\controllers\process\process_login.php" method="POST">
-
-            <div class="email">
-                <label for="email">Email </label>
-                <input type="text" placeholder="Inserte su usuario." id="email" name="email" required>
-            </div>
-
-            <div class="password">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" placeholder="Inserte su contraseña." id="password" name="password"  required>
-            </div>
-
-            <div class="register">
-                <a href="../public/register_user.html">¿No tienes una cuenta?</a>
-            </div>
-
-            <div class="input_button">
-                <button type="submit">Iniciar Sesión</button>
-            </div>
-        </form>
+    <!-- Fondo animado -->
+    <div class="background-animation">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
     </div>
 
-    <img src="../views/character/quieto.png" alt="Decoración" class="corner-image">
+    <!-- Container principal -->
+    <div class="login-container">
+        
+        <!-- Card de login -->
+        <div class="login-card">
+            
+            <!-- Logo y título -->
+            <div class="login-header">
+                <div class="logo-container">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <h1 class="login-title">Bienvenido a Moni-Fi</h1>
+                <p class="login-subtitle">Gestiona tus finanzas de manera inteligente</p>
+            </div>
 
+            <!-- Formulario -->
+            <form action="../controllers/process/process_login.php" method="POST" class="login-form">
+                
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i> Correo Electrónico
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input"
+                            placeholder="tucorreo@ejemplo.com" 
+                            required
+                            autocomplete="email">
+                    </div>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-key input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input"
+                            placeholder="••••••••" 
+                            required
+                            autocomplete="current-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="toggle-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botón de envío -->
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+
+                <!-- Link de registro -->
+                <div class="register-link">
+                    <p>¿No tienes una cuenta? 
+                        <a href="../public/register_user.html">
+                            <i class="fas fa-user-plus"></i> Regístrate aquí
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Imagen decorativa -->
+        <div class="character-container">
+            <img src="../views/character/quieto.png" alt="Mascota Moni-Fi" class="corner-image">
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar contraseña
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Animación de entrada
+        window.addEventListener('load', function() {
+            document.querySelector('.login-card').classList.add('loaded');
+        });
+    </script>
 
 </body>
 </html>
