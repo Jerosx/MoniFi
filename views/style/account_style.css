@@ -1,5 +1,5 @@
 /* ============================================
-   ACCOUNT DETAIL - STYLES
+   ACCOUNT DETAIL - STYLES (50/30/20 System)
    ============================================ */
 
 /* Variables CSS */
@@ -13,6 +13,11 @@
     --light-bg: #f8f9fc;
     --card-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
     --card-hover-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.25);
+    
+    /* Colores 50/30/20 */
+    --needs-color: #4e73df;      /* Azul para necesidades */
+    --wants-color: #e74a3b;      /* Rojo para gustos */
+    --savings-color: #1cc88a;    /* Verde para ahorro */
 }
 
 /* Body y Container Principal */
@@ -55,35 +60,134 @@ body {
     color: var(--primary-color);
 }
 
-/* ============================================
-   CARDS MODERNOS
-   ============================================ */
-.modern-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: var(--card-shadow);
-    padding: 25px;
-    margin-bottom: 25px;
+.btn {
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-weight: 600;
     transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--dark-color) 0%, #3a3b45 100%);
+    color: white;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================
+   INFO CARD 50/30/20 (Explicación de la regla)
+   ============================================ */
+.info-card-50-30-20 {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fc 100%);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
     animation: fadeInUp 0.6s ease;
 }
 
-.modern-card:hover {
-    box-shadow: var(--card-hover-shadow);
-    transform: translateY(-2px);
-}
-
-/* ============================================
-   STATS CARDS (TARJETAS DE ESTADÍSTICAS)
-   ============================================ */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+.rule-header {
+    text-align: center;
     margin-bottom: 30px;
 }
 
-.stat-card {
+.rule-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.rule-header h2 i {
+    color: var(--primary-color);
+}
+
+.rule-header p {
+    color: #858796;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.rule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.rule-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.rule-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rule-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.rule-icon.needs {
+    background: rgba(78, 115, 223, 0.15);
+    color: var(--needs-color);
+}
+
+.rule-icon.wants {
+    background: rgba(231, 74, 59, 0.15);
+    color: var(--wants-color);
+}
+
+.rule-icon.savings {
+    background: rgba(28, 200, 138, 0.15);
+    color: var(--savings-color);
+}
+
+.rule-content h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.rule-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #858796;
+}
+
+/* ============================================
+   STATS CARDS 50/30/20
+   ============================================ */
+.stats-container-50-30-20 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.stat-card-50-30-20 {
     background: white;
     border-radius: 15px;
     padding: 25px;
@@ -93,81 +197,127 @@ body {
     animation: fadeInUp 0.6s ease;
 }
 
-.stat-card:hover {
+.stat-card-50-30-20:hover {
     transform: translateY(-5px);
     box-shadow: var(--card-hover-shadow);
 }
 
-/* Colores de borde por tipo de stat */
-.stat-card.budget {
-    border-left-color: var(--info-color);
+.stat-card-50-30-20.needs {
+    border-left-color: var(--needs-color);
 }
 
-.stat-card.expenses {
-    border-left-color: var(--warning-color);
+.stat-card-50-30-20.wants {
+    border-left-color: var(--wants-color);
 }
 
-.stat-card.balance {
-    border-left-color: var(--success-color);
+.stat-card-50-30-20.savings {
+    border-left-color: var(--savings-color);
 }
 
-.stat-card.balance.negative {
-    border-left-color: var(--danger-color);
+/* Header del stat card */
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-/* Iconos de las stats */
-.stat-icon {
+.stat-card-50-30-20 .stat-icon {
     width: 60px;
     height: 60px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 1.8rem;
+}
+
+.stat-card-50-30-20.needs .stat-icon {
+    background: rgba(78, 115, 223, 0.15);
+    color: var(--needs-color);
+}
+
+.stat-card-50-30-20.wants .stat-icon {
+    background: rgba(231, 74, 59, 0.15);
+    color: var(--wants-color);
+}
+
+.stat-card-50-30-20.savings .stat-icon {
+    background: rgba(28, 200, 138, 0.15);
+    color: var(--savings-color);
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.stat-percentage {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+.stat-card-50-30-20.needs .stat-percentage {
+    background: var(--needs-color);
+}
+
+.stat-card-50-30-20.wants .stat-percentage {
+    background: var(--wants-color);
+}
+
+.stat-card-50-30-20.savings .stat-percentage {
+    background: var(--savings-color);
+}
+
+/* Budget rows */
+.stat-budget {
     margin-bottom: 15px;
 }
 
-.stat-card.budget .stat-icon {
-    background: rgba(54, 185, 204, 0.1);
-    color: var(--info-color);
+.budget-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e3e6f0;
 }
 
-.stat-card.expenses .stat-icon {
-    background: rgba(246, 194, 62, 0.1);
+.budget-row:last-child {
+    border-bottom: none;
+}
+
+.budget-row.remaining {
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding-top: 15px;
+    border-top: 2px solid #e3e6f0;
+}
+
+.budget-row .label {
+    color: #858796;
+    font-size: 0.9rem;
+}
+
+.budget-row .value {
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+.budget-row .value.spent {
     color: var(--warning-color);
 }
 
-.stat-card.balance .stat-icon {
-    background: rgba(28, 200, 138, 0.1);
-    color: var(--success-color);
-}
-
-.stat-card.balance.negative .stat-icon {
-    background: rgba(231, 74, 59, 0.1);
-    color: var(--danger-color);
-}
-
-/* Etiquetas y valores */
-.stat-label {
-    font-size: 0.9rem;
-    color: #858796;
-    margin-bottom: 5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stat-value {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 700;
-    color: var(--dark-color);
-    margin: 0;
-}
-
-/* ============================================
-   BARRA DE PROGRESO
-   ============================================ */
-.progress-section {
+/* Progress bar */
+.stat-progress {
     margin-top: 15px;
 }
 
@@ -175,11 +325,104 @@ body {
     height: 12px;
     border-radius: 10px;
     background-color: #e3e6f0;
+    overflow: hidden;
 }
 
 .progress-bar {
     border-radius: 10px;
     transition: width 0.6s ease;
+}
+
+.bg-needs {
+    background: linear-gradient(90deg, var(--needs-color) 0%, #3a5ec9 100%);
+}
+
+.bg-wants {
+    background: linear-gradient(90deg, var(--wants-color) 0%, #c1362d 100%);
+}
+
+.bg-savings {
+    background: linear-gradient(90deg, var(--savings-color) 0%, #17a673 100%);
+}
+
+.progress-label {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: #858796;
+    font-weight: 600;
+}
+
+/* ============================================
+   SUMMARY CARD (Resumen General)
+   ============================================ */
+.summary-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+}
+
+.summary-header h3 {
+    color: var(--dark-color);
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.4rem;
+}
+
+.summary-header h3 i {
+    color: var(--info-color);
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+    border-radius: 12px;
+    border-left: 4px solid var(--info-color);
+}
+
+.summary-item i {
+    font-size: 2rem;
+    color: var(--info-color);
+}
+
+.summary-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.summary-label {
+    font-size: 0.85rem;
+    color: #858796;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.summary-value.spent {
+    color: var(--warning-color);
 }
 
 /* ============================================
@@ -191,7 +434,7 @@ body {
     padding: 30px;
     box-shadow: var(--card-shadow);
     margin-bottom: 25px;
-    animation: fadeInUp 0.6s ease 0.2s both;
+    animation: fadeInUp 0.6s ease 0.3s both;
 }
 
 .form-section h3 {
@@ -226,42 +469,14 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
 }
 
-/* ============================================
-   BOTONES
-   ============================================ */
-.btn {
-    border-radius: 10px;
-    padding: 12px 25px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: none;
-}
-
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+    color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, var(--dark-color) 0%, #3a3b45 100%);
-}
-
-.btn-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, var(--danger-color) 0%, #c1362d 100%);
-}
-
-.btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 7px 14px rgba(231, 74, 59, 0.3);
 }
 
 /* ============================================
@@ -284,10 +499,6 @@ body {
     align-items: center;
     gap: 12px;
     font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-}
-
-.table-section h3 i {
-    color: var(--primary-color);
 }
 
 .table {
@@ -320,8 +531,37 @@ body {
     border-bottom: 1px solid #e3e6f0;
 }
 
+/* Badges para categorías */
+.badge-needs {
+    background: linear-gradient(135deg, var(--needs-color) 0%, #3a5ec9 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.badge-wants {
+    background: linear-gradient(135deg, var(--wants-color) 0%, #c1362d 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger-color) 0%, #c1362d 100%);
+    color: white;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 74, 59, 0.3);
+}
+
 /* ============================================
-   ESTADO VACÍO (EMPTY STATE)
+   EMPTY STATE
    ============================================ */
 .empty-state {
     text-align: center;
@@ -369,7 +609,20 @@ body {
    RESPONSIVE DESIGN
    ============================================ */
 
-/* Tablets */
+@media (max-width: 992px) {
+    .rule-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-container-50-30-20 {
+        grid-template-columns: 1fr;
+    }
+    
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
     .header-section {
         padding: 20px;
@@ -382,11 +635,18 @@ body {
         gap: 10px;
     }
 
-    .stats-container {
-        grid-template-columns: 1fr;
+    .info-card-50-30-20,
+    .form-section,
+    .table-section,
+    .summary-card {
+        padding: 20px;
     }
 
-    .form-section, .table-section {
+    .rule-item {
+        padding: 15px;
+    }
+
+    .stat-card-50-30-20 {
         padding: 20px;
     }
 
@@ -400,13 +660,15 @@ body {
     }
 }
 
-/* Móviles */
 @media (max-width: 576px) {
     body {
         padding: 10px 0;
     }
 
-    .modern-card, .form-section, .table-section {
+    .info-card-50-30-20,
+    .form-section,
+    .table-section,
+    .summary-card {
         padding: 15px;
     }
 
@@ -415,17 +677,22 @@ body {
         font-size: 0.9rem;
     }
 
-    .stat-card {
-        padding: 20px;
-    }
-
-    .stat-icon {
+    .rule-icon,
+    .stat-card-50-30-20 .stat-icon {
         width: 50px;
         height: 50px;
-        font-size: 20px;
+        font-size: 1.5rem;
     }
 
-    .stat-value {
-        font-size: 1.5rem;
+    .stat-info h3 {
+        font-size: 1.1rem;
+    }
+
+    .budget-row {
+        font-size: 0.9rem;
+    }
+
+    .summary-value {
+        font-size: 1.2rem;
     }
 }
