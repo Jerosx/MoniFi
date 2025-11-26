@@ -38,6 +38,8 @@ class CategoriaGasto {
 
     const ID = 'id';
     const NOMBRE = 'nombre';
+    const NECESIDADES_ID = 1;
+    const GUSTOS_ID = 2;
 }
 
 
